@@ -9,28 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout code
+    # 1. Checkout code
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Set up Docker Buildx
+    # 2. Set up Docker Buildx (required for caching)
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    # Step 3: Cache Docker layers
-    - name: Cache Docker layers
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-docker-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
-
-    # Step 4: Build optimized Docker image
+    # 3. Build Docker image with caching (FIXED)
     - name: Build Docker image (optimized)
-      run: |
-        docker build \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache \
-          -f Dockerfile.optimized \
-          -t fastapi-optimized .
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile.optimized
+        push: false
+        tags: fastapi-optimized:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
