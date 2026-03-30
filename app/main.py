@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 import time
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
+
+# Add Prometheus metrics
+Instrumentator().instrument(app).expose(app)
 
 @app.get("/")
 def read_root():
@@ -10,8 +14,8 @@ def read_root():
 @app.get("/slow")
 def slow_endpoint():
     time.sleep(2)
-    return {"message": "This is slow"}
+    return {"message": "This was slow"}
 
 @app.get("/error")
 def error():
-    return 1 / 0  # intentional error
+    return 1 / 0
