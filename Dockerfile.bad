@@ -1,4 +1,4 @@
-# BAD Dockerfile (intentionally inefficient)
+# BAD Dockerfile 
 
 FROM python:3.12
 
