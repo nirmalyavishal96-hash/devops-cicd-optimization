@@ -9,16 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4
       with:
         python-version: "3.12"
 
     - name: Install dependencies
       run: pip install -r app/requirements.txt
 
-    - name: Build Docker image
-      run: docker build -f Dockerfile.bad -t fastapi-bad .
+    - name: Build Docker image (slow)
+      run: docker build --no-cache -f Dockerfile.bad -t fastapi-bad .
+
+    - name: Simulate heavy task
+      run: sleep 20
